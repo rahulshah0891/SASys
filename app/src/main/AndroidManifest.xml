@@ -17,6 +17,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.DashboardActivity"/>
+
+        <activity android:name=".activity.StudentListActivity"/>
+
+        <activity android:name=".activity.AddStudentActivity"/>
+
+        <activity android:name=".activity.AttendanceListActivity"/>
+
+        <activity android:name=".activity.AttendanceDetailsActivity"/>
+
+        <activity android:name=".activity.AttendanceHistoryActivity"/>s
     </application>
 
 </manifest>

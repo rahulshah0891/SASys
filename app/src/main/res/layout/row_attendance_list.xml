@@ -39,11 +39,20 @@
                 style="@style/TextMediumNormal"
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:singleLine="false"
+                android:maxLines="2"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/ten_dp"
                 android:text="Test"
+                android:ellipsize="end"
                 android:textColor="@android:color/white" />
+
+            <CheckBox
+                android:id="@+id/cbPresent"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
