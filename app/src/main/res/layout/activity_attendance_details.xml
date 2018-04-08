@@ -48,40 +48,39 @@
                         android:textColor="#fff"
                         android:textStyle="bold" />
 
+                    <TextView
+                        style="@style/TextMediumNormal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:paddingEnd="30dp"
+                        android:paddingStart="30dp"
+                        android:layout_marginTop="@dimen/twenty_dp"
+                        android:text="@string/select_subject"
+                        android:textSize="15sp"
+                        android:textColor="@android:color/white" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:paddingEnd="30dp"
-                        android:paddingStart="30dp">
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_rectangle_spinner">
 
-                        <android.support.design.widget.TextInputLayout
+                        <Spinner
+                            android:id="@+id/spSubject"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColorHint="#f0f7f4"
-                            android:theme="@style/TextLabel">
+                            android:entries="@array/subjects"
+                            android:theme="@style/SpinnerItemStyle" />
 
-                            <EditText
-                                android:id="@+id/etSubjectName"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/selector_bg_edit_2"
-                                android:hint="Subject Name"
-                                android:inputType="textPersonName"
-                                android:paddingBottom="10dp"
-                                android:paddingTop="10dp"
-                                android:enabled="false"
-                                android:focusable="false"
-                                android:textColor="#f0f7f4"
-                                android:textCursorDrawable="@drawable/bg_input_cursor_2"
-                                android:textSize="15sp" />
-                        </android.support.design.widget.TextInputLayout>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="20dp"
                         android:orientation="horizontal"
                         android:paddingEnd="30dp"
                         android:paddingStart="30dp">
@@ -102,8 +101,6 @@
                                 android:inputType="textPersonName"
                                 android:paddingBottom="10dp"
                                 android:paddingTop="10dp"
-                                android:enabled="false"
-                                android:focusable="false"
                                 android:textColor="#f0f7f4"
                                 android:textCursorDrawable="@drawable/bg_input_cursor_2"
                                 android:textSize="15sp" />
@@ -113,7 +110,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="20dp"
                         android:orientation="horizontal"
                         android:paddingEnd="30dp"
                         android:paddingStart="30dp">
@@ -134,7 +131,6 @@
                                 android:inputType="textPersonName"
                                 android:paddingBottom="10dp"
                                 android:paddingTop="10dp"
-                                android:enabled="false"
                                 android:focusable="false"
                                 android:textColor="#f0f7f4"
                                 android:textCursorDrawable="@drawable/bg_input_cursor_2"

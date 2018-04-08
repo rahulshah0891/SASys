@@ -1,24 +1,30 @@
 package com.attendancesystem.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.attendancesystem.R;
 import com.attendancesystem.adapter.StudentListAdapter;
 import com.attendancesystem.bean.StudentBean;
+import com.attendancesystem.database.DatabaseMain;
+import com.attendancesystem.database.entity.Student;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by rahul.shah on 3/21/2018.
@@ -35,8 +41,9 @@ public class StudentListActivity extends BaseActivity {
     RecyclerView rvStudents;
     @BindView(R.id.fabAdd)
     FloatingActionButton fabAdd;
-    private ArrayList<StudentBean> arrStudent;
+    private List<Student> lsStudent;
     private StudentListAdapter studentListAdapter;
+    private View notDataView;
 
     @Override
     public int getContentView() {
@@ -56,28 +63,48 @@ public class StudentListActivity extends BaseActivity {
 
         rvStudents.setHasFixedSize(true);
         rvStudents.setLayoutManager(new LinearLayoutManager(this));
-        initAdapter();
+        notDataView = getLayoutInflater().inflate(R.layout.empty_view, (ViewGroup) rvStudents.getParent(), false);
+        notDataView.setOnClickListener(v -> getStudentList());
+
+        initAdapter(lsStudent);
     }
 
-    private ArrayList<StudentBean> generateStudentList() {
-        arrStudent = new ArrayList<>();
-        StudentBean bean;
-
-        for (int i = 0; i <= 20; i++) {
-            bean = new StudentBean();
-            bean.setRollNumber(i);
-            bean.setName("Student " + i);
-
-            arrStudent.add(bean);
-        }
-        return arrStudent;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getStudentList();
     }
 
-    private void initAdapter() {
-        studentListAdapter = new StudentListAdapter(generateStudentList());
+    private void getStudentList() {
+        Observable.fromCallable(() -> DatabaseMain.getDbInstance(this).getStudentDao().getAllStudents())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(student -> {
+                    Log.e("Name", student.size() + "");
+                    lsStudent = new ArrayList<>();
+                    lsStudent.addAll(student);
+                    Log.e("LS", lsStudent.size() + "");
+
+                }, throwable -> {
+                    Log.e("ERROR", throwable.getMessage());
+                }, () -> {
+                    //initAdapter(lsStudent);
+                    setListData(lsStudent);
+                });
+    }
+
+    private void initAdapter(List<Student> lsStudent) {
+        studentListAdapter = new StudentListAdapter(lsStudent);
         studentListAdapter.openLoadAnimation();
         studentListAdapter.isFirstOnly(false);
         studentListAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
         rvStudents.setAdapter(studentListAdapter);
+    }
+
+    private void setListData(List<Student> lsStudent){
+        if(lsStudent !=null && lsStudent.size()>0)
+            studentListAdapter.setNewData(lsStudent);
+        else
+            studentListAdapter.setEmptyView(notDataView);
     }
 }
