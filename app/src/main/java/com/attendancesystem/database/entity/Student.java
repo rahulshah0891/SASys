@@ -20,15 +20,11 @@ public class Student {
     @NonNull
     private String lastName;
 
-    @NonNull
-    private String email;
 
-
-    public Student(String rollNumber, @NonNull String firstName, @NonNull String lastName, @NonNull String email) {
+    public Student(String rollNumber, @NonNull String firstName, @NonNull String lastName) {
         this.rollNumber = rollNumber;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
     }
 
     public String getRollNumber() {
@@ -57,12 +53,4 @@ public class Student {
         this.lastName = lastName;
     }
 
-    @NonNull
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(@NonNull String email) {
-        this.email = email;
-    }
 }

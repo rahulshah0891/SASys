@@ -58,7 +58,7 @@ public class AttendanceListActivity extends BaseActivity {
     private List<Student> lsStudent;
     private List<Attendance> lsAttendance;
     private View notDataView;
-    String subject, faculty, attDate;
+    String subject, faculty, attDate,subjectCode;
 
     private SweetAlertDialog sweetAlertDialog;
 
@@ -82,6 +82,7 @@ public class AttendanceListActivity extends BaseActivity {
             subject = b.getString("subject");
             faculty = b.getString("faculty");
             attDate = b.getString("date");
+            subjectCode = b.getString("subjectCode");
         }
 
         rvStudents.setHasFixedSize(true);
@@ -129,7 +130,7 @@ public class AttendanceListActivity extends BaseActivity {
 
             attendance.setDate(date);
             attendance.setFacultyName(faculty);
-            attendance.setSubject(subject);
+            attendance.setSubCode(subjectCode);
             attendance.setRollNumber(lsStudent.get(i).getRollNumber());
             attendance.setStudentName(lsStudent.get(i).getFirstName() + " " + lsStudent.get(i).getLastName());
             lsAttendance.add(attendance);

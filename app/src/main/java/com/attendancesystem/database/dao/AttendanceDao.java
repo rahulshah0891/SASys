@@ -22,6 +22,8 @@ public interface AttendanceDao {
     @Insert
     void insert(Attendance attendance);
 
-    @Query("select * from Attendance where date=Date(:date)")
-    List<Attendance> getAttendance(String date);
+    @Query("select * from Attendance where date=Date(:date) and subCode=:subCode")
+    List<Attendance> getAttendance(String date, String subCode);
+
+
 }

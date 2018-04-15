@@ -28,6 +28,8 @@ public class DashboardActivity extends BaseActivity {
     CardView cvAttendance;
     @BindView(R.id.cvAttendanceHistory)
     CardView cvAttendanceHistory;
+    @BindView(R.id.cvUnits)
+    CardView cvUnits;
 
 
     @Override
@@ -54,6 +56,11 @@ public class DashboardActivity extends BaseActivity {
 
         cvAttendanceHistory.setOnClickListener(view -> {
             Intent i = new Intent(DashboardActivity.this, AttendanceHistoryActivity.class);
+            startActivity(i);
+        });
+
+        cvUnits.setOnClickListener(view -> {
+            Intent i = new Intent(DashboardActivity.this, UnitListActivity.class);
             startActivity(i);
         });
     }
