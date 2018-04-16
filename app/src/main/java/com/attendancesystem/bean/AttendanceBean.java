@@ -1,9 +1,5 @@
 package com.attendancesystem.bean;
 
-/**
- * Created by Rahul on 3/25/2018.
- */
-
 public class AttendanceBean {
 
     private int attendanceId;

@@ -155,7 +155,7 @@
         <Button
             android:id="@+id/btnSubmit"
             style="@style/TextMediumBold"
-            android:layout_width="320dp"
+            android:layout_width="314dp"
             android:layout_height="@dimen/dp_50"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"

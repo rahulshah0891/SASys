@@ -33,4 +33,7 @@ public interface StudentDAO {
     @Query("Select * from student where rollNumber=:rollNumber")
     Student getStudent(int rollNumber);
 
+    @Query("Select * from student where rollNumber IN(select rollNumber from unitstudents where subCode=:subCode and isSubjectSelected='1')")
+    List<Student> getStudentsForSubject(String subCode);
+
 }

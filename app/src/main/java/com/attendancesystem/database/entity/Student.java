@@ -2,6 +2,8 @@ package com.attendancesystem.database.entity;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 /**
@@ -9,7 +11,7 @@ import android.support.annotation.NonNull;
  */
 
 @Entity
-public class Student {
+public class Student implements Parcelable {
 
     @PrimaryKey @NonNull
     private String rollNumber;
@@ -20,6 +22,8 @@ public class Student {
     @NonNull
     private String lastName;
 
+    public Student() {
+    }
 
     public Student(String rollNumber, @NonNull String firstName, @NonNull String lastName) {
         this.rollNumber = rollNumber;
@@ -53,4 +57,33 @@ public class Student {
         this.lastName = lastName;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.rollNumber);
+        dest.writeString(this.firstName);
+        dest.writeString(this.lastName);
+    }
+
+    protected Student(Parcel in) {
+        this.rollNumber = in.readString();
+        this.firstName = in.readString();
+        this.lastName = in.readString();
+    }
+
+    public static final Creator<Student> CREATOR = new Creator<Student>() {
+        @Override
+        public Student createFromParcel(Parcel source) {
+            return new Student(source);
+        }
+
+        @Override
+        public Student[] newArray(int size) {
+            return new Student[size];
+        }
+    };
 }

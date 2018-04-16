@@ -144,7 +144,7 @@ public class AttendanceListActivity extends BaseActivity {
 
 
     private void getStudentList() {
-        Observable.fromCallable(() -> DatabaseMain.getDbInstance(this).getStudentDao().getAllStudents())
+        Observable.fromCallable(() -> DatabaseMain.getDbInstance(this).getStudentDao().getStudentsForSubject(subjectCode))
                 .subscribeOn(Schedulers.computation())
                 .subscribe(student -> {
                     Log.e("Name", student.size() + "");

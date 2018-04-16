@@ -10,7 +10,6 @@ import com.attendancesystem.R;
 import com.attendancesystem.adapter.AttendanceHistoryListAdapter;
 import com.attendancesystem.adapter.AttendanceListAdapter;
 import com.attendancesystem.bean.AttendanceBean;
-import com.attendancesystem.bean.StudentBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.ArrayList;

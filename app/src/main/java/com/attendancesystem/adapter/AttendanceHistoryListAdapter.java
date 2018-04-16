@@ -5,7 +5,6 @@ import android.widget.TextView;
 
 import com.attendancesystem.R;
 import com.attendancesystem.bean.AttendanceBean;
-import com.attendancesystem.bean.StudentBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 

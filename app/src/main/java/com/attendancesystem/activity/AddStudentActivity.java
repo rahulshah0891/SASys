@@ -1,5 +1,6 @@
 package com.attendancesystem.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -56,7 +57,10 @@ public class AddStudentActivity extends BaseActivity {
     @BindView(R.id.rvSubjects)
     RecyclerView rvSubjects;
     private List<Unit> lsUnit;
+    private List<UnitStudents> lsStudentUnits;
     private StudentUnitListAdapter studentUnitListAdapter;
+    private Student studentBean;
+    private boolean isEdit = false;
 
     @Override
     public int getContentView() {
@@ -69,9 +73,24 @@ public class AddStudentActivity extends BaseActivity {
 
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void initViews() {
         tvTitle.setText("Add Student");
+
+
+        if(getIntent().hasExtra("studentBean"))
+        {
+            studentBean = new Student();
+            studentBean = getIntent().getParcelableExtra("studentBean");
+            isEdit = true;
+            tvTitle.setText("Edit Student");
+            btnSubmit.setText("Update Student");
+            etRollNumber.setEnabled(false);
+            etRollNumber.setText(studentBean.getRollNumber());
+            etFirstName.setText(studentBean.getFirstName());
+            etLastName.setText(studentBean.getLastName());
+        }
 
         rvSubjects.setHasFixedSize(true);
         rvSubjects.setLayoutManager(new LinearLayoutManager(this));
@@ -81,22 +100,39 @@ public class AddStudentActivity extends BaseActivity {
             if (etRollNumber.getText() != null && etRollNumber.getText().toString().trim().length() > 0) {
                 if (etFirstName.getText() != null && etFirstName.getText().toString().trim().length() > 0) {
                     if (etLastName.getText() != null && etLastName.getText().toString().trim().length() > 0) {
-                        Completable.fromRunnable(() -> DatabaseMain.getDbInstance(AddStudentActivity.this)
-                                .getStudentDao()
-                                .insert(new Student(etRollNumber.getText().toString(),
-                                        etFirstName.getText().toString(),
-                                        etLastName.getText().toString())))
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribeOn(Schedulers.computation()).subscribe(() -> {
-                            Log.e("DB", "inserted");
-                            //finish();
-                            submitUnitStudentsData();
+                        if(!isEdit) {
+                            Completable.fromRunnable(() -> DatabaseMain.getDbInstance(AddStudentActivity.this)
+                                    .getStudentDao()
+                                    .insert(new Student(etRollNumber.getText().toString(),
+                                            etFirstName.getText().toString(),
+                                            etLastName.getText().toString())))
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribeOn(Schedulers.computation()).subscribe(() -> {
+                                Log.e("DB", "inserted");
+                                //finish();
+                                submitUnitStudentsData();
 
-                        }, throwable -> {
-                            Toast.makeText(AddStudentActivity.this, "Roll number already exists", Toast.LENGTH_SHORT).show();
-                            Log.e("Error", throwable.getMessage());
-                        });
+                            }, throwable -> {
+                                Toast.makeText(AddStudentActivity.this, "Roll number already exists", Toast.LENGTH_SHORT).show();
+                                Log.e("Error", throwable.getMessage());
+                            });
+                        }else {
+                            studentBean.setFirstName(etFirstName.getText().toString());
+                            studentBean.setLastName(etLastName.getText().toString());
+                            Completable.fromRunnable(() -> DatabaseMain.getDbInstance(AddStudentActivity.this)
+                                    .getStudentDao()
+                                    .update(studentBean))
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribeOn(Schedulers.computation()).subscribe(() -> {
+                                Log.e("DB", "updated");
+                                //finish();
+                                submitUnitStudentsData();
 
+                            }, throwable -> {
+                                Toast.makeText(AddStudentActivity.this, "Roll number already exists", Toast.LENGTH_SHORT).show();
+                                Log.e("Error", throwable.getMessage());
+                            });
+                        }
                     } else {
                         Toast.makeText(AddStudentActivity.this, "Last Name cannot be empty", Toast.LENGTH_SHORT).show();
                     }
@@ -109,6 +145,14 @@ public class AddStudentActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getUnitList();
+
+    }
+
+    @SuppressLint("CheckResult")
     private void submitUnitStudentsData() {
         List<UnitStudents> lsUnitStudents = new ArrayList<>();
 
@@ -120,25 +164,33 @@ public class AddStudentActivity extends BaseActivity {
             lsUnitStudents.add(unitStudents);
         }
 
-        Completable.fromRunnable(() -> DatabaseMain.getDbInstance(AddStudentActivity.this)
-                .getUnitStudentDao()
-                .insert(lsUnitStudents))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.computation()).subscribe(() -> {
-            Log.e("DB", "insertedUnitStudents");
-            finish();
-        }, throwable -> {
-            Toast.makeText(AddStudentActivity.this, "Roll number already exists", Toast.LENGTH_SHORT).show();
-            Log.e("Error", throwable.getMessage());
-        });
+        if(!isEdit) {
+            Completable.fromRunnable(() -> DatabaseMain.getDbInstance(AddStudentActivity.this)
+                    .getUnitStudentDao()
+                    .insert(lsUnitStudents))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.computation()).subscribe(() -> {
+                Log.e("DB", "insertedUnitStudents");
+                finish();
+            }, throwable -> {
+                Toast.makeText(AddStudentActivity.this, "Roll number already exists", Toast.LENGTH_SHORT).show();
+                Log.e("Error", throwable.getMessage());
+            });
+        }else{
+            Completable.fromRunnable(() -> DatabaseMain.getDbInstance(AddStudentActivity.this)
+                    .getUnitStudentDao()
+                    .update(lsUnitStudents))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.computation()).subscribe(() -> {
+                Log.e("DB", "updatedUnitStudents");
+                finish();
+            }, throwable -> {
+                Log.e("Error", throwable.getMessage());
+            });
+        }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getUnitList();
-    }
-
+    @SuppressLint("CheckResult")
     private void getUnitList() {
         Observable.fromCallable(() -> DatabaseMain.getDbInstance(this).getUnitDao().getUnitList())
                 .subscribeOn(Schedulers.computation())
@@ -156,6 +208,23 @@ public class AddStudentActivity extends BaseActivity {
                 });
     }
 
+    @SuppressLint("CheckResult")
+    private void getUnitsForStudent(){
+        Observable.fromCallable(() -> DatabaseMain.getDbInstance(this).getUnitStudentDao().getUnitsOfStudent(studentBean.getRollNumber()))
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(units -> {
+                    Log.e("EDIT", units.size() + "");
+                    lsStudentUnits = new ArrayList<>();
+                    lsStudentUnits.addAll(units);
+
+                }, throwable -> {
+                    Log.e("ERROR", throwable.getMessage());
+                }, () -> {
+                    //initAdapter(lsStudent);
+                    studentUnitListAdapter.selectUnitsForUpdate(lsStudentUnits);
+                });
+    }
 
     private void initAdapter(List<Unit> lsUnit) {
         studentUnitListAdapter = new StudentUnitListAdapter(lsUnit);
@@ -168,8 +237,12 @@ public class AddStudentActivity extends BaseActivity {
     }
 
     private void setListData(List<Unit> lsUnit) {
-        if (lsUnit != null && lsUnit.size() > 0)
+        if (lsUnit != null && lsUnit.size() > 0) {
             studentUnitListAdapter.setNewData(lsUnit);
+            if(isEdit){
+                getUnitsForStudent();
+            }
+        }
     }
 
 }
