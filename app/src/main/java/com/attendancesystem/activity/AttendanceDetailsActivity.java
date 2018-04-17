@@ -1,5 +1,6 @@
 package com.attendancesystem.activity;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -76,19 +77,13 @@ public class AttendanceDetailsActivity extends BaseActivity {
         getUnitList();
 
         btnSubmit.setOnClickListener(view -> {
-            if(etFacultyName.getText() != null && etFacultyName.getText().toString().trim().length() > 0) {
-                if(etDate.getText() != null && etDate.getText().toString().trim().length() > 0) {
-
-                    Intent i = new Intent(AttendanceDetailsActivity.this, AttendanceListActivity.class);
-                    i.putExtra("subject", spSubject.getSelectedItem().toString());
-                    i.putExtra("subjectCode", lsUnit.get(spSubject.getSelectedItemPosition()).getSubCode());
-                    i.putExtra("faculty", etFacultyName.getText().toString());
-                    i.putExtra("date", etDate.getText().toString());
-                    startActivity(i);
-                }else {
+            if (etFacultyName.getText() != null && etFacultyName.getText().toString().trim().length() > 0) {
+                if (etDate.getText() != null && etDate.getText().toString().trim().length() > 0) {
+                    getAttendanceList();
+                } else {
                     Toast.makeText(AttendanceDetailsActivity.this, "Date cannot be empty", Toast.LENGTH_SHORT).show();
                 }
-            }else{
+            } else {
                 Toast.makeText(AttendanceDetailsActivity.this, "Faculty Name cannot be empty", Toast.LENGTH_SHORT).show();
             }
         });
@@ -98,6 +93,8 @@ public class AttendanceDetailsActivity extends BaseActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
                 etFacultyName.setText(lsUnit.get(position).getLecturer());
+                etFacultyName.setEnabled(false);
+                etFacultyName.setFocusable(false);
             }
 
             @Override
@@ -139,6 +136,7 @@ public class AttendanceDetailsActivity extends BaseActivity {
         etDate.setText(sdf.format(myCalendar.getTime()));
     }
 
+    @SuppressLint("CheckResult")
     private void getUnitList() {
         Observable.fromCallable(() -> DatabaseMain.getDbInstance(this).getUnitDao().getUnitList())
                 .subscribeOn(Schedulers.computation())
@@ -152,13 +150,36 @@ public class AttendanceDetailsActivity extends BaseActivity {
                     Log.e("ERROR", throwable.getMessage());
                 }, () -> {
                     arrSub = new ArrayList<>();
-                    for (int i = 0; i < lsUnit.size() ; i++) {
+                    for (int i = 0; i < lsUnit.size(); i++) {
                         arrSub.add(lsUnit.get(i).getTitle());
                     }
-                    spnrSubAdapter = new ArrayAdapter<String>(AttendanceDetailsActivity.this, android.R.layout.simple_spinner_item, arrSub);
+                    spnrSubAdapter = new ArrayAdapter<String>(AttendanceDetailsActivity.this, R.layout.support_simple_spinner_dropdown_item, arrSub);
                     spSubject.setAdapter(spnrSubAdapter);
                 });
     }
 
+    @SuppressLint("CheckResult")
+    private void getAttendanceList() {
+        Observable.fromCallable(() -> DatabaseMain.getDbInstance(this).getAttendanceDao().getAttendance(etDate.getText().toString(), lsUnit.get(spSubject.getSelectedItemPosition()).getSubCode()))
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(attendances -> {
+                    Log.e("Attendance", attendances.size() + "");
+                    if (attendances.size() > 0) {
+                        Toast.makeText(AttendanceDetailsActivity.this, "Attendance for selected subject already exists on this date", Toast.LENGTH_LONG).show();
+                    } else {
+                        Intent i = new Intent(AttendanceDetailsActivity.this, AttendanceListActivity.class);
+                        i.putExtra("subject", spSubject.getSelectedItem().toString());
+                        i.putExtra("subjectCode", lsUnit.get(spSubject.getSelectedItemPosition()).getSubCode());
+                        i.putExtra("faculty", etFacultyName.getText().toString());
+                        i.putExtra("date", etDate.getText().toString());
+                        startActivity(i);
+                    }
+                }, throwable -> {
+                    Log.e("ERROR", throwable.getMessage());
+                }, () -> {
+
+                });
+    }
 
 }

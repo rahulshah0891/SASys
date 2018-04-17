@@ -71,7 +71,7 @@
                         <Spinner
                             android:id="@+id/spSubject"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="25dp"
                             android:entries="@array/subjects"
                             android:spinnerMode="dropdown"
                             android:overlapAnchor="false"

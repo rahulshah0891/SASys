@@ -154,17 +154,17 @@ public class AddStudentActivity extends BaseActivity {
 
     @SuppressLint("CheckResult")
     private void submitUnitStudentsData() {
-        List<UnitStudents> lsUnitStudents = new ArrayList<>();
-
-        for (int i = 0; i < studentUnitListAdapter.getData().size(); i++) {
-            UnitStudents unitStudents = new UnitStudents();
-            unitStudents.setRollNumber(etRollNumber.getText().toString());
-            unitStudents.setSubCode(studentUnitListAdapter.getData().get(i).getSubCode());
-            unitStudents.setSubjectSelected(studentUnitListAdapter.getData().get(i).isSelected());
-            lsUnitStudents.add(unitStudents);
-        }
-
         if(!isEdit) {
+            List<UnitStudents> lsUnitStudents = new ArrayList<>();
+
+            for (int i = 0; i < studentUnitListAdapter.getData().size(); i++) {
+                UnitStudents unitStudents = new UnitStudents();
+                unitStudents.setRollNumber(etRollNumber.getText().toString());
+                unitStudents.setSubCode(studentUnitListAdapter.getData().get(i).getSubCode());
+                unitStudents.setSubjectSelected(studentUnitListAdapter.getData().get(i).isSelected());
+                lsUnitStudents.add(unitStudents);
+            }
+
             Completable.fromRunnable(() -> DatabaseMain.getDbInstance(AddStudentActivity.this)
                     .getUnitStudentDao()
                     .insert(lsUnitStudents))
@@ -177,9 +177,20 @@ public class AddStudentActivity extends BaseActivity {
                 Log.e("Error", throwable.getMessage());
             });
         }else{
+            for (int i = 0; i < studentUnitListAdapter.getData().size(); i++) {
+                for (int j = 0; j < lsStudentUnits.size(); j++) {
+                    if(studentUnitListAdapter.getData().get(i).getSubCode().matches(lsStudentUnits.get(j).getSubCode())){
+                        if(studentUnitListAdapter.getData().get(i).isSelected()){
+                            lsStudentUnits.get(j).setSubjectSelected(true);
+                        }else{
+                            lsStudentUnits.get(j).setSubjectSelected(false);
+                        }
+                    }
+                }
+            }
             Completable.fromRunnable(() -> DatabaseMain.getDbInstance(AddStudentActivity.this)
                     .getUnitStudentDao()
-                    .update(lsUnitStudents))
+                    .update(lsStudentUnits))
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.computation()).subscribe(() -> {
                 Log.e("DB", "updatedUnitStudents");

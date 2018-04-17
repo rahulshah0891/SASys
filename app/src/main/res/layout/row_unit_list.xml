@@ -26,7 +26,7 @@
 
             <TextView
                 android:id="@+id/tvSubjectTitle"
-                style="@style/TextLargeBold"
+                style="@style/TextMediumBold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -43,24 +43,31 @@
 
                 <TextView
 
-                    style="@style/TextMediumBold"
+                    style="@style/TextSmallBold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/ten_dp"
-                    android:layout_weight="0.7"
+                    android:layout_weight="0.6"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="Subject Code:"
+                    android:text="Subject Code"
                     android:textColor="#e6e6e6" />
 
                 <TextView
+                    style="@style/TextSmallBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@android:color/white"/>
+                <TextView
                     android:id="@+id/tvSubjectCode"
-                    style="@style/TextMediumNormal"
+                    style="@style/TextSmallNormal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="ABC001"
@@ -76,21 +83,29 @@
 
                 <TextView
 
-                    style="@style/TextMediumBold"
+                    style="@style/TextSmallBold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/ten_dp"
-                    android:layout_weight="0.7"
+                    android:layout_weight="0.6"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="Lecturer:"
+                    android:text="Lecturer"
                     android:textColor="#e6e6e6" />
 
                 <TextView
+                    style="@style/TextSmallBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@android:color/white"/>
+
+                <TextView
                     android:id="@+id/tvLecturer"
-                    style="@style/TextMediumNormal"
+                    style="@style/TextSmallNormal"
                     android:layout_width="0dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
@@ -109,24 +124,32 @@
 
                 <TextView
 
-                    style="@style/TextMediumBold"
+                    style="@style/TextSmallBold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/ten_dp"
-                    android:layout_weight="0.7"
+                    android:layout_weight="0.6"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="Lecturer Email:"
+                    android:text="Lecturer Email"
                     android:textColor="#e6e6e6" />
 
                 <TextView
+                    style="@style/TextSmallBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@android:color/white"/>
+
+                <TextView
                     android:id="@+id/tvLecturerEmail"
-                    style="@style/TextMediumNormal"
+                    style="@style/TextSmallNormal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="ABC@gmail.com"
@@ -142,25 +165,33 @@
 
                 <TextView
 
-                    style="@style/TextMediumBold"
+                    style="@style/TextSmallBold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/ten_dp"
-                    android:layout_weight="0.7"
+                    android:layout_weight="0.6"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="College Name:"
+                    android:text="College Name"
                     android:textColor="#e6e6e6" />
 
                 <TextView
+                    style="@style/TextSmallBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@android:color/white"/>
+
+                <TextView
                     android:id="@+id/tvCollegeName"
-                    style="@style/TextMediumNormal"
+                    style="@style/TextSmallNormal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:ellipsize="end"
+                    android:layout_marginLeft="5dp"
                     android:maxLines="1"
                     android:text="ABC College"
                     android:textColor="@android:color/white" />
