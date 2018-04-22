@@ -27,4 +27,7 @@ public interface UnitDao {
 
     @Update
     void update(Unit unit);
+
+    @Query("select email from Unit where subCode=:subCode")
+    String getFacultyEmail(String subCode);
 }

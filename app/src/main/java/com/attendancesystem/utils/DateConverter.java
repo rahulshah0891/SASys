@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class DateConverter {
     static DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
+    static DateFormat dfdashed = new SimpleDateFormat("dd-MM-yyyy");
     @TypeConverter
     public static Date fromTimestamp(String value) {
         if (value != null) {
@@ -28,5 +28,9 @@ public class DateConverter {
     public static String dateToTimestamp(Date value) {
 
         return value == null ? null : df.format(value);
+    }
+
+    public static String dateToString(Date value){
+        return value == null ? null : dfdashed.format(value);
     }
 }

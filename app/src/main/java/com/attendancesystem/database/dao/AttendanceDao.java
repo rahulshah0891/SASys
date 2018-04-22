@@ -3,6 +3,7 @@ package com.attendancesystem.database.dao;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 
 import com.attendancesystem.database.entity.Attendance;
@@ -21,6 +22,9 @@ public interface AttendanceDao {
 
     @Insert
     void insert(Attendance attendance);
+
+    @Update
+    void update(List<Attendance> attendances);
 
     @Query("select * from Attendance where date=:date and subCode=:subCode")
     List<Attendance> getAttendance(String date, String subCode);

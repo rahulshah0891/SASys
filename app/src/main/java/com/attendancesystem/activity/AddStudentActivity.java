@@ -24,6 +24,7 @@ import com.attendancesystem.utils.Utils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -58,6 +59,7 @@ public class AddStudentActivity extends BaseActivity {
     RecyclerView rvSubjects;
     private List<Unit> lsUnit;
     private List<UnitStudents> lsStudentUnits;
+    private HashMap<String, UnitStudents> hashStudentUnits;
     private StudentUnitListAdapter studentUnitListAdapter;
     private Student studentBean;
     private boolean isEdit = false;
@@ -79,8 +81,7 @@ public class AddStudentActivity extends BaseActivity {
         tvTitle.setText("Add Student");
 
 
-        if(getIntent().hasExtra("studentBean"))
-        {
+        if (getIntent().hasExtra("studentBean")) {
             studentBean = new Student();
             studentBean = getIntent().getParcelableExtra("studentBean");
             isEdit = true;
@@ -100,7 +101,7 @@ public class AddStudentActivity extends BaseActivity {
             if (etRollNumber.getText() != null && etRollNumber.getText().toString().trim().length() > 0) {
                 if (etFirstName.getText() != null && etFirstName.getText().toString().trim().length() > 0) {
                     if (etLastName.getText() != null && etLastName.getText().toString().trim().length() > 0) {
-                        if(!isEdit) {
+                        if (!isEdit) {
                             Completable.fromRunnable(() -> DatabaseMain.getDbInstance(AddStudentActivity.this)
                                     .getStudentDao()
                                     .insert(new Student(etRollNumber.getText().toString(),
@@ -116,7 +117,7 @@ public class AddStudentActivity extends BaseActivity {
                                 Toast.makeText(AddStudentActivity.this, "Roll number already exists", Toast.LENGTH_SHORT).show();
                                 Log.e("Error", throwable.getMessage());
                             });
-                        }else {
+                        } else {
                             studentBean.setFirstName(etFirstName.getText().toString());
                             studentBean.setLastName(etLastName.getText().toString());
                             Completable.fromRunnable(() -> DatabaseMain.getDbInstance(AddStudentActivity.this)
@@ -154,7 +155,7 @@ public class AddStudentActivity extends BaseActivity {
 
     @SuppressLint("CheckResult")
     private void submitUnitStudentsData() {
-        if(!isEdit) {
+        if (!isEdit) {
             List<UnitStudents> lsUnitStudents = new ArrayList<>();
 
             for (int i = 0; i < studentUnitListAdapter.getData().size(); i++) {
@@ -176,21 +177,28 @@ public class AddStudentActivity extends BaseActivity {
                 Toast.makeText(AddStudentActivity.this, "Roll number already exists", Toast.LENGTH_SHORT).show();
                 Log.e("Error", throwable.getMessage());
             });
-        }else{
+        } else {
             for (int i = 0; i < studentUnitListAdapter.getData().size(); i++) {
                 for (int j = 0; j < lsStudentUnits.size(); j++) {
-                    if(studentUnitListAdapter.getData().get(i).getSubCode().matches(lsStudentUnits.get(j).getSubCode())){
-                        if(studentUnitListAdapter.getData().get(i).isSelected()){
+                    if (studentUnitListAdapter.getData().get(i).getSubCode().matches(lsStudentUnits.get(j).getSubCode())) {
+                        if (studentUnitListAdapter.getData().get(i).isSelected()) {
                             lsStudentUnits.get(j).setSubjectSelected(true);
-                        }else{
+                        } else {
                             lsStudentUnits.get(j).setSubjectSelected(false);
                         }
                     }
                 }
+                if (!hashStudentUnits.containsKey(studentUnitListAdapter.getData().get(i).getSubCode())) {
+                    UnitStudents unitStudents = new UnitStudents();
+                    unitStudents.setRollNumber(etRollNumber.getText().toString());
+                    unitStudents.setSubCode(studentUnitListAdapter.getData().get(i).getSubCode());
+                    unitStudents.setSubjectSelected(studentUnitListAdapter.getData().get(i).isSelected());
+                    lsStudentUnits.add(unitStudents);
+                }
             }
             Completable.fromRunnable(() -> DatabaseMain.getDbInstance(AddStudentActivity.this)
                     .getUnitStudentDao()
-                    .update(lsStudentUnits))
+                    .insert(lsStudentUnits))
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.computation()).subscribe(() -> {
                 Log.e("DB", "updatedUnitStudents");
@@ -220,7 +228,7 @@ public class AddStudentActivity extends BaseActivity {
     }
 
     @SuppressLint("CheckResult")
-    private void getUnitsForStudent(){
+    private void getUnitsForStudent() {
         Observable.fromCallable(() -> DatabaseMain.getDbInstance(this).getUnitStudentDao().getUnitsOfStudent(studentBean.getRollNumber()))
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -229,6 +237,10 @@ public class AddStudentActivity extends BaseActivity {
                     lsStudentUnits = new ArrayList<>();
                     lsStudentUnits.addAll(units);
 
+                    hashStudentUnits = new HashMap<>();
+                    for (int i = 0; i < lsStudentUnits.size(); i++) {
+                        hashStudentUnits.put(lsStudentUnits.get(i).getSubCode(), lsStudentUnits.get(i));
+                    }
                 }, throwable -> {
                     Log.e("ERROR", throwable.getMessage());
                 }, () -> {
@@ -250,7 +262,7 @@ public class AddStudentActivity extends BaseActivity {
     private void setListData(List<Unit> lsUnit) {
         if (lsUnit != null && lsUnit.size() > 0) {
             studentUnitListAdapter.setNewData(lsUnit);
-            if(isEdit){
+            if (isEdit) {
                 getUnitsForStudent();
             }
         }

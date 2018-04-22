@@ -61,6 +61,7 @@ public class AttendanceListActivity extends BaseActivity {
     String subject, faculty, attDate,subjectCode;
 
     private SweetAlertDialog sweetAlertDialog;
+    private boolean isEdit = false;
 
     @Override
     public int getContentView() {
@@ -79,10 +80,17 @@ public class AttendanceListActivity extends BaseActivity {
         Bundle b = getIntent().getExtras();
 
         if (b != null) {
-            subject = b.getString("subject");
-            faculty = b.getString("faculty");
-            attDate = b.getString("date");
-            subjectCode = b.getString("subjectCode");
+            isEdit = b.getBoolean("isEdit");
+            if(!isEdit) {
+                subject = b.getString("subject");
+                faculty = b.getString("faculty");
+                attDate = b.getString("date");
+                subjectCode = b.getString("subjectCode");
+            }else{
+                attDate = b.getString("date");
+                subjectCode = b.getString("subjectCode");
+                Log.e("DATE", attDate+"");
+            }
         }
 
         rvStudents.setHasFixedSize(true);
@@ -101,7 +109,10 @@ public class AttendanceListActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getStudentList();
+        if(!isEdit)
+            getStudentList();
+        else
+            showEditAttendanceData();
     }
 
     private void initAdapter(List<Attendance> lsAttendance) {
@@ -140,6 +151,21 @@ public class AttendanceListActivity extends BaseActivity {
         /*Completable.fromRunnable(() -> DatabaseMain.getDbInstance(AttendanceListActivity.this).getAttendanceDao()
                 .insert(lsAttendance)).subscribeOn(Schedulers.computation()).subscribe(() -> Log.e("Success", "success"),
                 throwable -> Log.e("ERROR", throwable.getMessage()));*/
+    }
+
+    private void showEditAttendanceData(){
+        Observable.fromCallable(() -> DatabaseMain.getDbInstance(this).getAttendanceDao().getAttendance(attDate, subjectCode))
+                .subscribeOn(Schedulers.computation())
+                .subscribe(attendances -> {
+                    lsAttendance = new ArrayList<>();
+                    lsAttendance.addAll(attendances);
+                    Log.e("edit", attendances.size()+"");
+                }, throwable -> {
+                    Log.e("ERROR", throwable.getMessage());
+                }, () -> {
+                    //setListData(lsStudent);
+                    setListData(lsAttendance);
+                });
     }
 
 
@@ -181,27 +207,51 @@ public class AttendanceListActivity extends BaseActivity {
                     sweetAlertDialog.setTitleText("Success!");
                     sweetAlertDialog.setContentText("Submitting attendance..").changeAlertType(SweetAlertDialog.PROGRESS_TYPE);
 
-                    Completable.fromRunnable(() -> DatabaseMain.getDbInstance(AttendanceListActivity.this).getAttendanceDao()
-                            .insert(attendanceListAdapter.getData())).subscribeOn(Schedulers.computation())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(() -> {
-                                        sweetAlertDialog.setCancelable(false);
-                                        sweetAlertDialog.setContentText("Attendance submitted successfully!")
-                                                .setConfirmText("OK")
-                                                .setConfirmClickListener(sweetAlertDialog1 -> {
-                                                    sweetAlertDialog.cancel();
-                                                    Intent i = new Intent(AttendanceListActivity.this, DashboardActivity.class);
-                                                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                    startActivity(i);
+                    if(!isEdit) {
+                        Completable.fromRunnable(() -> DatabaseMain.getDbInstance(AttendanceListActivity.this).getAttendanceDao()
+                                .insert(attendanceListAdapter.getData())).subscribeOn(Schedulers.computation())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(() -> {
+                                            sweetAlertDialog.setCancelable(false);
+                                            sweetAlertDialog.setContentText("Attendance submitted successfully!")
+                                                    .setConfirmText("OK")
+                                                    .setConfirmClickListener(sweetAlertDialog1 -> {
+                                                        sweetAlertDialog.cancel();
+                                                        Intent i = new Intent(AttendanceListActivity.this, DashboardActivity.class);
+                                                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                        startActivity(i);
 
-                                                }).showCancelButton(false)
-                                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                                    },
-                                    throwable -> {
-                                        sweetAlertDialog.cancel();
-                                        Toast.makeText(AttendanceListActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                                        Log.e("ERROR", throwable.getMessage());
-                                    });
+                                                    }).showCancelButton(false)
+                                                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                        },
+                                        throwable -> {
+                                            sweetAlertDialog.cancel();
+                                            Toast.makeText(AttendanceListActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                                            Log.e("ERROR", throwable.getMessage());
+                                        });
+                    }else {
+                        Completable.fromRunnable(() -> DatabaseMain.getDbInstance(AttendanceListActivity.this).getAttendanceDao()
+                                .update(attendanceListAdapter.getData())).subscribeOn(Schedulers.computation())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(() -> {
+                                            sweetAlertDialog.setCancelable(false);
+                                            sweetAlertDialog.setContentText("Attendance submitted successfully!")
+                                                    .setConfirmText("OK")
+                                                    .setConfirmClickListener(sweetAlertDialog1 -> {
+                                                        sweetAlertDialog.cancel();
+                                                        Intent i = new Intent(AttendanceListActivity.this, DashboardActivity.class);
+                                                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                        startActivity(i);
+
+                                                    }).showCancelButton(false)
+                                                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                        },
+                                        throwable -> {
+                                            sweetAlertDialog.cancel();
+                                            Toast.makeText(AttendanceListActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                                            Log.e("ERROR", throwable.getMessage());
+                                        });
+                    }
                 })
                 .show();
     }

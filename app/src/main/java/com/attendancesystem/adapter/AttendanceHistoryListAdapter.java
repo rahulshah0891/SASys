@@ -30,5 +30,7 @@ public class AttendanceHistoryListAdapter extends BaseQuickAdapter<Attendance, B
     protected void convert(BaseViewHolder helper, Attendance item) {
         ((TextView)helper.getView(R.id.tvDate)).setText(DateConverter.dateToTimestamp(item.getDate()));
         ((TextView)helper.getView(R.id.tvSubject)).setText(item.getSubCode());
+
+        helper.addOnClickListener(R.id.ivEdit).addOnClickListener(R.id.ivShare);
     }
 }
