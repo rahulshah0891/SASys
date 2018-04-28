@@ -23,7 +23,7 @@
             android:drawablePadding="10dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="Dashboard"
+            android:text="Attendance System"
             android:textColor="@android:color/white" />
 
 

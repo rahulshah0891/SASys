@@ -26,7 +26,7 @@
             android:layout_margin="@dimen/ten_dp"
             android:layout_marginLeft="@dimen/ten_dp"
             android:layout_weight="0.5"
-            android:text="Roll #"
+            android:text="Student ID"
             android:textColor="@android:color/white" />
 
         <TextView

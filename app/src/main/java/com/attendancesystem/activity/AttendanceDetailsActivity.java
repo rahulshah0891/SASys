@@ -166,7 +166,7 @@ public class AttendanceDetailsActivity extends BaseActivity {
                 .subscribe(attendances -> {
                     Log.e("Attendance", attendances.size() + "");
                     if (attendances.size() > 0) {
-                        Toast.makeText(AttendanceDetailsActivity.this, "Attendance for selected subject already exists on this date", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AttendanceDetailsActivity.this, "Attendance for selected unit already exists on this date", Toast.LENGTH_LONG).show();
                     } else {
                         Intent i = new Intent(AttendanceDetailsActivity.this, AttendanceListActivity.class);
                         i.putExtra("subject", spSubject.getSelectedItem().toString());

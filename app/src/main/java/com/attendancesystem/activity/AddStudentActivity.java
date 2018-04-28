@@ -114,7 +114,7 @@ public class AddStudentActivity extends BaseActivity {
                                 submitUnitStudentsData();
 
                             }, throwable -> {
-                                Toast.makeText(AddStudentActivity.this, "Roll number already exists", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddStudentActivity.this, "Student ID already exists", Toast.LENGTH_SHORT).show();
                                 Log.e("Error", throwable.getMessage());
                             });
                         } else {
@@ -130,7 +130,7 @@ public class AddStudentActivity extends BaseActivity {
                                 submitUnitStudentsData();
 
                             }, throwable -> {
-                                Toast.makeText(AddStudentActivity.this, "Roll number already exists", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddStudentActivity.this, "Student ID already exists", Toast.LENGTH_SHORT).show();
                                 Log.e("Error", throwable.getMessage());
                             });
                         }
@@ -141,7 +141,7 @@ public class AddStudentActivity extends BaseActivity {
                     Toast.makeText(AddStudentActivity.this, "First Name cannot be empty", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(AddStudentActivity.this, "Roll Number cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddStudentActivity.this, "Student ID cannot be empty", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -174,7 +174,7 @@ public class AddStudentActivity extends BaseActivity {
                 Log.e("DB", "insertedUnitStudents");
                 finish();
             }, throwable -> {
-                Toast.makeText(AddStudentActivity.this, "Roll number already exists", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddStudentActivity.this, "Student ID already exists", Toast.LENGTH_SHORT).show();
                 Log.e("Error", throwable.getMessage());
             });
         } else {

@@ -57,7 +57,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/selector_bg_edit_2"
-                                android:hint="Roll Number"
+                                android:hint="Student ID"
                                 android:inputType="textPersonName"
                                 android:paddingBottom="10dp"
                                 android:paddingTop="10dp"
@@ -133,7 +133,7 @@
                         android:layout_marginTop="@dimen/twenty_dp"
                         android:paddingEnd="30dp"
                         android:paddingStart="30dp"
-                        android:text="Select subject:"
+                        android:text="Select Unit:"
                         android:textColor="@android:color/white" />
 
 

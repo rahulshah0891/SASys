@@ -99,7 +99,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/selector_bg_edit_2"
-                                android:hint="Faculty Name"
+                                android:hint="Lecturer Name"
                                 android:inputType="textPersonName"
                                 android:paddingBottom="10dp"
                                 android:paddingTop="10dp"

@@ -1,11 +1,15 @@
 package com.attendancesystem.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,8 +46,8 @@ public class UnitActivity extends BaseActivity {
     EditText etLecturerName;
     @BindView(R.id.etLecturerEmail)
     EditText etLecturerEmail;
-    @BindView(R.id.etCollegeName)
-    EditText etCollegeName;
+    @BindView(R.id.spCollege)
+    Spinner spCollege;
     @BindView(R.id.btnSubmit)
     Button btnSubmit;
     @BindView(R.id.tvSubTitle)
@@ -51,6 +55,8 @@ public class UnitActivity extends BaseActivity {
 
     private Unit unitBean;
     private boolean isEdit = false;
+    private String[] collegeArray;
+    private int selectedSpnrPos = 0;
 
     @Override
     public int getContentView() {
@@ -64,7 +70,9 @@ public class UnitActivity extends BaseActivity {
 
     @Override
     public void initViews() {
-        tvTitle.setText("Subject");
+        tvTitle.setText("Unit");
+
+        collegeArray = getResources().getStringArray(R.array.college);
 
         if(getIntent().hasExtra("unit"))
         {
@@ -75,15 +83,33 @@ public class UnitActivity extends BaseActivity {
 
             etSubjectTitle.setText(unitBean.getTitle());
             etSubCode.setText(unitBean.getSubCode());
-            etCollegeName.setText(unitBean.getCollegeName());
             etLecturerEmail.setText(unitBean.getEmail());
             etLecturerName.setText(unitBean.getLecturer());
 
+            for (int i=0; i<collegeArray.length; i++){
+                if(collegeArray[i].equalsIgnoreCase(unitBean.getCollegeName())){
+                    selectedSpnrPos = i;
+                }
+            }
+            spCollege.setSelection(selectedSpnrPos);
+
             etSubCode.setEnabled(false);
             etSubCode.setFocusable(false);
-            btnSubmit.setText("Update Subject");
-            tvSubTitle.setText("Update Subject");
+            btnSubmit.setText("Update Unit");
+            tvSubTitle.setText("Update Unit");
         }
+
+        spCollege.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         btnSubmit.setOnClickListener(view -> {
 
@@ -92,13 +118,12 @@ public class UnitActivity extends BaseActivity {
                     if (etLecturerName.getText() != null && etLecturerName.getText().toString().trim().length() > 0) {
                         if (etLecturerEmail.getText() != null && etLecturerEmail.getText().toString().trim().length() > 0) {
                             if (Utils.isValidEmail(etLecturerEmail.getText().toString())) {
-                                if (etCollegeName.getText() != null && etCollegeName.getText().toString().trim().length() > 0) {
                                     Unit unit = new Unit();
                                     unit.setSubCode(etSubCode.getText().toString());
                                     unit.setTitle(etSubjectTitle.getText().toString());
                                     unit.setLecturer(etLecturerName.getText().toString());
                                     unit.setEmail(etLecturerEmail.getText().toString());
-                                    unit.setCollegeName(etCollegeName.getText().toString());
+                                    unit.setCollegeName(spCollege.getSelectedItem().toString());
 
                                     if(!isEdit) {
                                         Completable.fromRunnable(() -> DatabaseMain.getDbInstance(UnitActivity.this)
@@ -109,7 +134,7 @@ public class UnitActivity extends BaseActivity {
                                             Log.e("DB", "inserted");
                                             finish();
                                         }, throwable -> {
-                                            Toast.makeText(UnitActivity.this, "Subject code already exists", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(UnitActivity.this, "Unit already exists", Toast.LENGTH_SHORT).show();
                                             Log.e("Error", throwable.getMessage());
                                         });
                                     }else {
@@ -121,13 +146,11 @@ public class UnitActivity extends BaseActivity {
                                             Log.e("DB", "updated");
                                             finish();
                                         }, throwable -> {
-                                            Toast.makeText(UnitActivity.this, "Subject code already exists", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(UnitActivity.this, "Unit already exists", Toast.LENGTH_SHORT).show();
                                             Log.e("Error", throwable.getMessage());
                                         });
                                     }
-                                } else {
-                                    Toast.makeText(UnitActivity.this, "College name cannot be empty", Toast.LENGTH_SHORT).show();
-                                }
+
                             } else {
                                 Toast.makeText(UnitActivity.this, "Please enter valid Email address", Toast.LENGTH_SHORT).show();
                             }
@@ -138,10 +161,10 @@ public class UnitActivity extends BaseActivity {
                         Toast.makeText(UnitActivity.this, "Lecturer name cannot be empty", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(UnitActivity.this, "Subject title cannot be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UnitActivity.this, "Unit title cannot be empty", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(UnitActivity.this, "Subject code cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UnitActivity.this, "Unit cannot be empty", Toast.LENGTH_SHORT).show();
             }
         });
     }

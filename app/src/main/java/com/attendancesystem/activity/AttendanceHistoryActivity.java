@@ -180,14 +180,14 @@ public class AttendanceHistoryActivity extends BaseActivity {
             writer = new CSVWriter(new FileWriter(filepath));
 
 
-            data.add(new String[] {"", "","","" ,"DATE ", DateConverter.dateToTimestamp(lsAttendance.get(0).getDate())});
-            data.add(new String[] {"", "","","" ,"SUBJECT", lsAttendance.get(0).getSubCode()});
-            data.add(new String[] {"", "","","" ,"FACULTY NAME", lsAttendance.get(0).getFacultyName()});
+            data.add(new String[] {"", "","","" ,"DATE ", DateConverter.dateToString(lsAttendance.get(0).getDate())});
+            data.add(new String[] {"", "","","" ,"UNIT", lsAttendance.get(0).getSubCode()});
+            data.add(new String[] {"", "","","" ,"LECTURER NAME", lsAttendance.get(0).getFacultyName()});
             data.add(new String[] {"",""});
             data.add(new String[] {"",""});
             data.add(new String[] {"",""});
 
-            data.add(new String[]{"","","","","ROLL NUMBER", "STATUS"});
+            data.add(new String[]{"","","","","STUDENT ID","STUDENT NAME", "STATUS"});
             //writer.writeAll(data, false);
 
             for (int i = 0; i < lsAttendance.size(); i++){
@@ -197,7 +197,7 @@ public class AttendanceHistoryActivity extends BaseActivity {
                 else
                     status = "Absent";
 
-                data.add(new String[]{"","","","",lsAttendance.get(i).getRollNumber(), status});
+                data.add(new String[]{"","","","",lsAttendance.get(i).getRollNumber(), lsAttendance.get(i).getStudentName(), status});
             }
 
             writer.writeAll(data, false);

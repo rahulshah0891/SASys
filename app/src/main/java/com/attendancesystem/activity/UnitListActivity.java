@@ -55,7 +55,7 @@ public class UnitListActivity extends BaseActivity {
 
     @Override
     public void initViews() {
-        tvTitle.setText("Subject List");
+        tvTitle.setText("Unit List");
 
         fabAdd.setOnClickListener(view -> startActivity(new Intent(UnitListActivity.this, UnitActivity.class)));
 
