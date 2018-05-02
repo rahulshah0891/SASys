@@ -61,7 +61,7 @@ public class ReadMeActivity extends MaterialIntroActivity {
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.first_slide_background)
                 .buttonsColor(R.color.first_slide_buttons)
-                .image(R.drawable.units)
+                .image(R.drawable.attendance_history)
                 .title("Attendance History")
                 .description("You can share the attendance data from history and you can also edit attendance for particular day.")
                 .build());
