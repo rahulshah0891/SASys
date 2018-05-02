@@ -48,4 +48,5 @@ dependencies {
     compile 'com.facebook.stetho:stetho:1.5.0'
 
     compile 'com.opencsv:opencsv:4.1'
+    compile 'agency.tango.android:material-intro-screen:0.0.5'
 }

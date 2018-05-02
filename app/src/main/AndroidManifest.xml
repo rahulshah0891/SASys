@@ -32,6 +32,9 @@
             android:name=".activity.UnitActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.UnitListActivity" />
+        <activity
+            android:name=".activity.ReadMeActivity"
+            android:theme="@style/Theme.Intro" />
     </application>
 
 </manifest>

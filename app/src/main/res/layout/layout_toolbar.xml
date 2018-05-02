@@ -9,10 +9,9 @@
     app:contentInsetStart="0dp"
     android:minHeight="?attr/actionBarSize">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
@@ -23,10 +22,21 @@
             android:drawablePadding="10dp"
             android:ellipsize="end"
             android:singleLine="true"
+            android:layout_centerInParent="true"
             android:text="Attendance System"
             android:textColor="@android:color/white" />
 
 
-    </LinearLayout>
+        <ImageButton
+            android:id="@+id/ibInfo"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="14dp"
+            android:background="@drawable/ic_info_outline_black_24dp" />
+
+    </RelativeLayout>
 
 </android.support.v7.widget.Toolbar>

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.attendancesystem.R;
@@ -30,6 +32,8 @@ public class DashboardActivity extends BaseActivity {
     CardView cvAttendanceHistory;
     @BindView(R.id.cvUnits)
     CardView cvUnits;
+    @BindView(R.id.ibInfo)
+    ImageButton ibInfo;
 
 
     @Override
@@ -61,6 +65,12 @@ public class DashboardActivity extends BaseActivity {
 
         cvUnits.setOnClickListener(view -> {
             Intent i = new Intent(DashboardActivity.this, UnitListActivity.class);
+            startActivity(i);
+        });
+
+        ibInfo.setVisibility(View.VISIBLE);
+        ibInfo.setOnClickListener(view -> {
+            Intent i = new Intent(DashboardActivity.this, ReadMeActivity.class);
             startActivity(i);
         });
     }
